@@ -88,7 +88,6 @@ public class WebsocketServer {
     public void onClose(Session session) throws IOException, TimeoutException {
         logger.info("Websocket Close Connection.");
         SessionUtils.remove(this);
-        logServer.closeResource();
     }
 
     public void sendMessage(String message) throws IOException{
