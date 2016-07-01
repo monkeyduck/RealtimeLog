@@ -5,11 +5,13 @@ import jdk.nashorn.internal.runtime.ECMAException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.DBHelper;
+import utils.DBUtils;
 import utils.SessionUtils;
 import utils.Utils;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -18,7 +20,6 @@ import java.util.concurrent.TimeoutException;
 public class LogServer {
     private String QUEUE_NAME = "WebsocketPipe";
     private static final Logger logger = LoggerFactory.getLogger(LogServer.class);
-    private DBHelper dbHelper = new DBHelper();
     private static ConnectionFactory factory;
     private Connection connection;
     private Channel channel;
@@ -36,12 +37,20 @@ public class LogServer {
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
                     throws IOException {
                 String message = new String(body, "UTF-8");
-
-                CopyOnWriteArraySet<WebsocketServer> webSocketSet = SessionUtils.getSimpleWebSocketSet();
-                for (WebsocketServer websocketServer: webSocketSet){
-                    websocketServer.sendMessage(message);
+                logger.info("Received message:"+message);
+                if (SessionUtils.getSimpleWebSocketSet().size() > 0 ||
+                        SessionUtils.getComplexSocketSet().size() > 0){
+                    try{
+                        MyLog log = new MyLog(message);
+                        if (log.belongsToSimple()){
+                            broadcastSimple(log);
+                        }
+                        broadcastComplex(message);
+                        logger.info("Received '" + message + "'");
+                    }catch (Exception e){
+                        logger.error(e.getMessage());
+                    }
                 }
-                logger.info("Received '" + message + "'");
                 storeIntoDatabase(message);
             }
         };
@@ -52,13 +61,29 @@ public class LogServer {
             MyLog log = new MyLog(message);
             if (log.isModtransUseful()){
                 if (!log.getDate().equals(Utils.getExistedDate())){
-                    dbHelper.createTable(log.getDate());
+                    DBUtils.createTable(log.getDate());
                 }
-                dbHelper.insertLog(log);
+                DBUtils.insertLog(log);
                 logger.info("Inserted into database successfully!");
             }
         }catch (Exception e){
             logger.info("Cannot parse the log:"+message);
+        }
+    }
+
+    public void broadcastSimple(MyLog log) throws IOException{
+        logger.info("Start to broadcast simple logs:"+log.toSimpleLog());
+        CopyOnWriteArraySet<WebsocketServer> simplewebSocketSet = SessionUtils.getSimpleWebSocketSet();
+        logger.info("simple set size:"+simplewebSocketSet.size());
+        for (WebsocketServer websocketServer: simplewebSocketSet){
+            websocketServer.sendMessage(log.toSimpleLog());
+        }
+    }
+
+    public void broadcastComplex(String message) throws IOException{
+        CopyOnWriteArraySet<WebsocketServer> webSocketSet = SessionUtils.getComplexSocketSet();
+        for (WebsocketServer websocketServer: webSocketSet){
+            websocketServer.sendMessage(message);
         }
     }
 

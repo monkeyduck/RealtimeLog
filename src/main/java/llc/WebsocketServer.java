@@ -59,9 +59,11 @@ public class WebsocketServer {
         if (!module.equals("")) clientSetting.setModule(module);
 
         if (message.contains("complexLog")){
-            SessionUtils.changeToComplex(this);
+            SessionUtils.removeSimple(this);
+            SessionUtils.addComplex(this);
         }
         else if (message.contains("simpleLog")){
+            SessionUtils.removeComplex(this);
             SessionUtils.addSimple(this);
         }
         return "Got your message ("+ message +")";
@@ -83,9 +85,10 @@ public class WebsocketServer {
      * @param session
      */
     @OnClose
-    public void onClose(Session session) {
+    public void onClose(Session session) throws IOException, TimeoutException {
         logger.info("Websocket Close Connection.");
         SessionUtils.remove(this);
+        logServer.closeResource();
     }
 
     public void sendMessage(String message) throws IOException{

@@ -32,8 +32,6 @@ public class SessionUtils {
     public static void removeSimple(WebsocketServer websocket){
         if (simpleSocketSet.contains(websocket))
             simpleSocketSet.remove(websocket);
-        else
-            logger.error("No websocketServer registered in simpleSocketSet!Please add it before remove");
     }
 
     public static void addComplex(WebsocketServer websocketServer){
@@ -43,9 +41,6 @@ public class SessionUtils {
     public static void removeComplex(WebsocketServer websocketServer){
         if (complexSocketSet.contains(websocketServer)){
             complexSocketSet.remove(websocketServer);
-        }
-        else{
-            logger.error("No websocketServer registered in complexSocketSet!Please add it before remove");
         }
     }
 

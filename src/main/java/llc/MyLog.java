@@ -37,6 +37,7 @@ public class MyLog {
         this.content = jsonObject.getString("content");
         this.ip = jsonObject.getString("ip");
     }
+
     MyLog(LogItem logItem, LogGroupData logGroupData){
         this.log_source = logGroupData.GetSource();
         this.log_time = logItem.GetTime();
@@ -119,6 +120,52 @@ public class MyLog {
         else
             return false;
     }
+
+    public boolean belongsToSimple(){
+        if (this.modtrans.contains("->"))
+            return true;
+        else
+            return false;
+    }
+
+    public String getContentText(){
+        JSONObject jsonObject = JSONObject.fromObject(this.content);
+        if (content.contains("sendContent")){
+            return jsonObject.getString("sendContent");
+        }
+        else if (content.contains("replyContent")){
+            return jsonObject.getString("replyContent");
+        }
+        else{
+            return this.content;
+        }
+    }
+
+    public String getShortMem(){
+        if (this.member_id.contains("."))
+            return member_id.split(".")[1];
+        else
+            return member_id;
+    }
+
+    public String getVersion(){
+        JSONObject jsonObject = JSONObject.fromObject(this.content);
+        if (content.contains("version")){
+            return jsonObject.getString("version");
+        }
+        else if (content.contains("softwareVersion")){
+            return jsonObject.getString("softwareVersion");
+        }
+        else{
+            return "";
+        }
+    }
+
+    public String toSimpleLog(){
+        return this.time+" "+this.log_level+" "+this.modtrans+" "+this.getContentText()+
+                " "+this.getShortMem()+" "+this.getVersion();
+    }
+
     @Override
     public String toString(){
         return "{\"log_source\":\"" + this.getLog_source()+"\",\"log_time\":"+this.getLog_time()+",\"log_topic\":\""
