@@ -19,6 +19,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.aliyun.openservices</groupId>
+            <artifactId>aliyun-log</artifactId>
+            <version>0.6.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.sun.xml.stream</groupId>
             <artifactId>sjsxp</artifactId>
             <version>1.0.2</version>

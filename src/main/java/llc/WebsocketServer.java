@@ -1,7 +1,9 @@
 package llc;
 
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.ClientSetting;
 import utils.SessionUtils;
 
 import javax.websocket.*;
@@ -15,6 +17,7 @@ import java.util.concurrent.TimeoutException;
 @ServerEndpoint("/websocket")
 public class WebsocketServer {
     private static final Logger logger = LoggerFactory.getLogger(WebsocketServer.class);
+    private static ClientSetting clientSetting = new ClientSetting();
     private Session session;
     private static LogServer logServer;
     static {
@@ -41,7 +44,6 @@ public class WebsocketServer {
     public void onOpen(Session session){
         this.session = session;
         logger.info("Websocket Start Connecting...");
-        SessionUtils.add(this);
     }
     /**
      * 收到客户端消息时触发
@@ -50,7 +52,19 @@ public class WebsocketServer {
      */
     @OnMessage
     public String onMessage(String message) {
-        return "Got your message ("+ message +").Thanks !";
+        JSONObject jsonObject = JSONObject.fromObject(message);
+        String id = jsonObject.getString("search_id");
+        String module = jsonObject.getString("module");
+        if (!id.equals("")) clientSetting.setMember_id(id);
+        if (!module.equals("")) clientSetting.setModule(module);
+
+        if (message.contains("complexLog")){
+            SessionUtils.changeToComplex(this);
+        }
+        else if (message.contains("simpleLog")){
+            SessionUtils.addSimple(this);
+        }
+        return "Got your message ("+ message +")";
     }
 
     /**

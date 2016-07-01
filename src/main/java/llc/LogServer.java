@@ -1,7 +1,12 @@
 package llc;
 
 import com.rabbitmq.client.*;
+import jdk.nashorn.internal.runtime.ECMAException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import utils.DBHelper;
 import utils.SessionUtils;
+import utils.Utils;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -12,12 +17,14 @@ import java.util.concurrent.TimeoutException;
  */
 public class LogServer {
     private String QUEUE_NAME = "WebsocketPipe";
+    private static final Logger logger = LoggerFactory.getLogger(LogServer.class);
+    private DBHelper dbHelper = new DBHelper();
     private static ConnectionFactory factory;
     private Connection connection;
     private Channel channel;
     static {
         factory = new ConnectionFactory();
-        factory.setHost("123.56.237.250");
+        factory.setHost("localhost");
     }
 
     public void start() throws IOException, TimeoutException{
@@ -29,28 +36,29 @@ public class LogServer {
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
                     throws IOException {
                 String message = new String(body, "UTF-8");
-                CopyOnWriteArraySet<WebsocketServer> webSocketSet = SessionUtils.getWebSocketSet();
+
+                CopyOnWriteArraySet<WebsocketServer> webSocketSet = SessionUtils.getSimpleWebSocketSet();
                 for (WebsocketServer websocketServer: webSocketSet){
                     websocketServer.sendMessage(message);
                 }
-                System.out.println(" [x] Received '" + message + "'");
+                logger.info("Received '" + message + "'");
+                storeIntoDatabase(message);
             }
         };
         channel.basicConsume(QUEUE_NAME, true, consumer);
     }
-    public void broadcastLog() throws IOException {
-        while(true){
-            CopyOnWriteArraySet<WebsocketServer> webSocketSet = SessionUtils.getWebSocketSet();
-            for (int i=1;i<=10;i++){
-                for (WebsocketServer websocketServer: webSocketSet){
-                    websocketServer.sendMessage("This is the "+i+"message");
+    public void storeIntoDatabase(String message){
+        try{
+            MyLog log = new MyLog(message);
+            if (log.isModtransUseful()){
+                if (!log.getDate().equals(Utils.getExistedDate())){
+                    dbHelper.createTable(log.getDate());
                 }
-                try {
-                    Thread.sleep(10 * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                dbHelper.insertLog(log);
+                logger.info("Inserted into database successfully!");
             }
+        }catch (Exception e){
+            logger.info("Cannot parse the log:"+message);
         }
     }
 

@@ -1,6 +1,8 @@
 package utils;
 
 import llc.WebsocketServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -12,17 +14,55 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class SessionUtils {
 
-    private static CopyOnWriteArraySet<WebsocketServer> webSocketSet = new CopyOnWriteArraySet<WebsocketServer>();
+    private static final Logger logger = LoggerFactory.getLogger(SessionUtils.class);
 
-    public static void add(WebsocketServer websocket){
-        webSocketSet.add(websocket);
+    private static CopyOnWriteArraySet<WebsocketServer> complexSocketSet = new CopyOnWriteArraySet<WebsocketServer>();
+
+    private static CopyOnWriteArraySet<WebsocketServer> simpleSocketSet = new CopyOnWriteArraySet<WebsocketServer>();
+
+    public static void changeToComplex(WebsocketServer websocketServer){
+        removeSimple(websocketServer);
+        addComplex(websocketServer);
     }
 
-    public static void remove(WebsocketServer websocket){
-        webSocketSet.remove(websocket);
+    public static void addSimple(WebsocketServer websocket){
+        simpleSocketSet.add(websocket);
     }
 
-    public static CopyOnWriteArraySet<WebsocketServer> getWebSocketSet(){
-        return webSocketSet;
+    public static void removeSimple(WebsocketServer websocket){
+        if (simpleSocketSet.contains(websocket))
+            simpleSocketSet.remove(websocket);
+        else
+            logger.error("No websocketServer registered in simpleSocketSet!Please add it before remove");
+    }
+
+    public static void addComplex(WebsocketServer websocketServer){
+        complexSocketSet.add(websocketServer);
+    }
+
+    public static void removeComplex(WebsocketServer websocketServer){
+        if (complexSocketSet.contains(websocketServer)){
+            complexSocketSet.remove(websocketServer);
+        }
+        else{
+            logger.error("No websocketServer registered in complexSocketSet!Please add it before remove");
+        }
+    }
+
+    public static CopyOnWriteArraySet<WebsocketServer> getSimpleWebSocketSet(){
+        return simpleSocketSet;
+    }
+
+    public static CopyOnWriteArraySet<WebsocketServer> getComplexSocketSet(){
+        return complexSocketSet;
+    }
+
+    public static void add(WebsocketServer websocketServer){
+        addSimple(websocketServer);
+    }
+
+    public static void remove(WebsocketServer websocketServer){
+        removeSimple(websocketServer);
+        removeComplex(websocketServer);
     }
 }
