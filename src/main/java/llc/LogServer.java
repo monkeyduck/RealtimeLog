@@ -76,7 +76,21 @@ public class LogServer {
         CopyOnWriteArraySet<WebsocketServer> simplewebSocketSet = SessionUtils.getSimpleWebSocketSet();
         logger.info("simple set size:"+simplewebSocketSet.size());
         for (WebsocketServer websocketServer: simplewebSocketSet){
-            websocketServer.sendMessage(log.toSimpleLog());
+            String member_id = websocketServer.getClientSetting().getMember_id();
+            String module = websocketServer.getClientSetting().getModule();
+            boolean flag_mem = true;
+            boolean flag_module = true;
+            if (!member_id.equals("")){
+                if (!log.getContent().contains(member_id))
+                    flag_mem = false;
+            }
+            if (!module.equals("")){
+                if (!log.getModtrans().contains(module)){
+                    flag_module = false;
+                }
+            }
+            if (flag_mem && flag_module)
+                websocketServer.sendMessage(log.toSimpleLog());
         }
     }
 

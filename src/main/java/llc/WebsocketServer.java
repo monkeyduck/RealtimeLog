@@ -17,7 +17,7 @@ import java.util.concurrent.TimeoutException;
 @ServerEndpoint("/websocket")
 public class WebsocketServer {
     private static final Logger logger = LoggerFactory.getLogger(WebsocketServer.class);
-    private static ClientSetting clientSetting = new ClientSetting();
+    private ClientSetting clientSetting = new ClientSetting();
     private Session session;
     private static LogServer logServer;
     static {
@@ -94,4 +94,7 @@ public class WebsocketServer {
         this.session.getBasicRemote().sendText(message);
     }
 
+    public ClientSetting getClientSetting() {
+        return this.clientSetting;
+    }
 }

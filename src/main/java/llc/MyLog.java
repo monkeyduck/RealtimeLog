@@ -122,7 +122,7 @@ public class MyLog {
     }
 
     public boolean belongsToSimple(){
-        if (this.modtrans.contains("->"))
+        if (this.modtrans.contains("user"))
             return true;
         else
             return false;
