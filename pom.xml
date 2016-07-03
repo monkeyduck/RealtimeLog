@@ -58,7 +58,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <finalName>websocket</finalName>
-    </build>
 </project>
