@@ -84,7 +84,7 @@ public class LogServer {
                 if (!log.getContent().contains(member_id))
                     flag_mem = false;
             }
-            if (!module.equals("")){
+            if (!module.equals("") && !module.equals("All")){
                 if (!log.getModtrans().contains(module)){
                     flag_module = false;
                 }
