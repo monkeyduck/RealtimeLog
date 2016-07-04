@@ -19,32 +19,40 @@
 </head>
 
 <body>
-<input id="search_id" type="text" />
-<div class="form-group">
-    <select class="form-control input-lg" id="moduleSelect">
-        <option value="">Module</option>
-        <option value="GeneralGame">GeneralGame</option>
-        <option value="Dialog">Dialog</option>
-        <option value="WorldView">WorldView</option>
-        <option value="handworkGuide">handworkGuide</option>
-        <option value="cartoon">cartoon</option>
-        <option value="music">music</option>
-        <option value="story">story</option>
-        <option value="FrontEnd">FrontEnd</option>
-        <option value="Preprocess">Preprocess</option>
-        <option value="All">All</option>
-    </select>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 vcenter"></div>
+        <div class="col-md-7 vcenter">
+            <div class="form-group">
+                <input id="search_id" type="text" placeholder="member id"/>
+                <div class="form-group">
+                    <select class="form-control input-lg" id="moduleSelect">
+                        <option value="">Module</option>
+                        <option value="GeneralGame">GeneralGame</option>
+                        <option value="Dialog">Dialog</option>
+                        <option value="WorldView">WorldView</option>
+                        <option value="handworkGuide">handworkGuide</option>
+                        <option value="cartoon">cartoon</option>
+                        <option value="music">music</option>
+                        <option value="story">story</option>
+                        <option value="FrontEnd">FrontEnd</option>
+                        <option value="Preprocess">Preprocess</option>
+                        <option value="All">All</option>
+                    </select>
+                </div>
+                <div class="form-select-button">
+                    <select class="form-select-button" id="difficulty">
+                        <option value="simpleLog">Simple Log</option>
+                        <option value="complexLog">Complex Log</option>
+                    </select>
+                </div>
+                <button onclick="displayLog()">Display</button>
+                <button onclick="closeWebSocket()">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="form-select-button">
-    <select class="form-select-button" id="difficulty">
-        <option value="simpleLog">Simple Log</option>
-        <option value="complexLog">Complex Log</option>
-    </select>
-</div>
-<button onclick="displayLog()">Display</button>
-<button onclick="closeWebSocket()">Close</button>
-<div id="message">
-</div>
+<div id="message"></div>
 </body>
 
 <script type="text/javascript">
