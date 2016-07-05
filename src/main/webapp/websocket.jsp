@@ -87,7 +87,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-1 vcenter"></div>
-        <div class="col-md-5 vcenter">
+        <div class="col-md-6 vcenter">
             <table id="message" style="width: 80%"></table>
         </div>
     </div>
