@@ -17,6 +17,9 @@
     <base href="<%=basePath%>">
     <title>My WebSocket</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     <!-- 新 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
 
@@ -57,37 +60,40 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-1 vcenter"></div>
-        <div class="col-md-7 vcenter">
-            <div class="form-group">
-                <input id="search_id" type="text" placeholder="member id"/>
-                <div class="form-group">
-                    <select class="form-control input-lg" id="moduleSelect">
-                        <option value="">Module</option>
-                        <option value="GeneralGame">GeneralGame</option>
-                        <option value="Dialog">Dialog</option>
-                        <option value="WorldView">WorldView</option>
-                        <option value="handworkGuide">handworkGuide</option>
-                        <option value="cartoon">cartoon</option>
-                        <option value="music">music</option>
-                        <option value="story">story</option>
-                        <option value="FrontEnd">FrontEnd</option>
-                        <option value="Preprocess">Preprocess</option>
-                        <option value="All">All</option>
-                    </select>
-                </div>
-                <div class="form-select-button">
-                    <select class="form-select-button" id="difficulty">
-                        <option value="simpleLog">Simple Log</option>
-                        <option value="complexLog">Complex Log</option>
-                    </select>
-                </div>
-                <button onclick="displayLog()">Display</button>
-                <button onclick="closeWebSocket()">Close</button>
-            </div>
+        <div class="col-md-4 vcenter">
+            <input id="member_id" type="text" class="form-control" placeholder="输入要查询的member id"/>
+            <select class="selectpicker" id="moduleSelect">
+                <option value="">Module</option>
+                <option value="GeneralGame">GeneralGame</option>
+                <option value="dialog">dialog</option>
+                <option value="WorldView">WorldView</option>
+                <option value="handworkGuide">handworkGuide</option>
+                <option value="cartoon">cartoon</option>
+                <option value="music">music</option>
+                <option value="story">story</option>
+                <option value="FrontEnd">FrontEnd</option>
+                <option value="preprocess">Preprocess</option>
+                <option value="All">All</option>
+            </select>
+            <select class="selectpicker" id="difficulty">
+                <option value="simpleLog">Simple Log</option>
+                <option value="complexLog">Complex Log</option>
+            </select>
+            <button type="button" onclick="displayLog()" class="btn btn-default">Display</button>
+            <button type="button" onclick="closeWebSocket()" class="btn btn-default">Close</button>
         </div>
     </div>
 </div>
-<div id="message"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 vcenter"></div>
+        <div class="col-md-5 vcenter">
+            <table id="message" style="width: 80%"></table>
+        </div>
+    </div>
+
+
+</div>
 </body>
 
 <script type="text/javascript">
@@ -117,8 +123,8 @@
     }
 
     //连接关闭的回调方法
-    websocket.onclose = function(event){
-        setMessageInnerHTML(event.reason);
+    websocket.onclose = function(){
+        setMessageInnerHTML("Closed connection.");
     }
 
     //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
@@ -128,7 +134,8 @@
 
     //将消息显示在网页上
     function setMessageInnerHTML(innerHTML){
-        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+        console.info(innerHTML);
+        document.getElementById('message').innerHTML += '<tr>'+innerHTML+'</tr>';
     }
 
     //关闭连接
@@ -137,10 +144,10 @@
     }
 
     function displayLog() {
-        var id = document.getElementById('search_id').value;
+        var id = document.getElementById('member_id').value;
         var module = document.getElementById('moduleSelect').value;
         var type = document.getElementById('difficulty').value;
-        websocket.send("{\"search_id\":\""+id+"\",\"module\":\""+module+"\",\""+type+"\":1}");
+        websocket.send("{\"member_id\":\""+id+"\",\"module\":\""+module+"\",\""+type+"\":1}");
 
     }
 

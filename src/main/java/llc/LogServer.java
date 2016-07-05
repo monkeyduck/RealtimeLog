@@ -39,11 +39,14 @@ public class LogServer {
                     throws IOException {
                 String message = new String(body, "UTF-8");
                 logger.info("Received message:"+message);
+                logger.info("simple size:"+SessionUtils.getSimpleWebSocketSet().size());
+                logger.info("complex size:"+SessionUtils.getComplexSocketSet().size());
                 if (SessionUtils.getSimpleWebSocketSet().size() > 0 ||
                         SessionUtils.getComplexSocketSet().size() > 0){
                     try{
                         MyLog log = new MyLog(message);
                         if (log.belongsToSimple()){
+                            System.out.println("#############");
                             broadcastSimple(log);
                         }
                         broadcastComplex(message);
@@ -52,7 +55,7 @@ public class LogServer {
                         logger.error(e.getMessage());
                     }
                 }
-                storeIntoDatabase(message);
+//                storeIntoDatabase(message);
             }
         };
         channel.basicConsume(QUEUE_NAME, true, consumer);
@@ -73,7 +76,8 @@ public class LogServer {
     }
 
     public void broadcastSimple(MyLog log) throws IOException{
-        logger.info("Start to broadcast simple logs:"+log.toSimpleLog());
+        logger.info("Start to broadcast simple logs...");
+        System.out.println(log.toSimpleLog());
         CopyOnWriteArraySet<WebsocketServer> simplewebSocketSet = SessionUtils.getSimpleWebSocketSet();
         logger.info("simple set size:"+simplewebSocketSet.size());
         for (WebsocketServer websocketServer: simplewebSocketSet){
@@ -82,7 +86,7 @@ public class LogServer {
             boolean flag_mem = true;
             boolean flag_module = true;
             if (!member_id.equals("")){
-                if (!log.getContent().contains(member_id))
+                if (!log.getMember_id().contains(member_id))
                     flag_mem = false;
             }
             if (!module.equals("") && !module.equals("All")){

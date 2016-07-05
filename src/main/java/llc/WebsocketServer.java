@@ -44,6 +44,7 @@ public class WebsocketServer {
     public void onOpen(Session session){
         this.session = session;
         logger.info("Websocket Start Connecting...");
+        SessionUtils.addSimple(this);
     }
     /**
      * 收到客户端消息时触发
@@ -53,7 +54,7 @@ public class WebsocketServer {
     @OnMessage
     public String onMessage(String message) {
         JSONObject jsonObject = JSONObject.fromObject(message);
-        String id = jsonObject.getString("search_id");
+        String id = jsonObject.getString("member_id");
         String module = jsonObject.getString("module");
         if (!id.equals("")) clientSetting.setMember_id(id);
         if (!module.equals("")) clientSetting.setModule(module);

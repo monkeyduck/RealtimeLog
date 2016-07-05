@@ -23,6 +23,7 @@ public class MyLog {
     private String log_level;
     private String modtrans;
     private String content;
+    private JSONObject jsonObject;
 
     MyLog(String message) throws Exception{
         JSONObject jsonObject = JSONObject.fromObject(message);
@@ -34,8 +35,12 @@ public class MyLog {
         this.device_id = jsonObject.getString("device_id");
         this.member_id = jsonObject.getString("member_id");
         this.modtrans = jsonObject.getString("modtrans");
+        if (modtrans.contains("user")){
+            System.out.println("YES");
+        }
         this.content = jsonObject.getString("content");
         this.ip = jsonObject.getString("ip");
+        this.jsonObject = JSONObject.fromObject(this.content);
     }
 
     MyLog(LogItem logItem, LogGroupData logGroupData){
@@ -129,12 +134,11 @@ public class MyLog {
     }
 
     public String getContentText(){
-        JSONObject jsonObject = JSONObject.fromObject(this.content);
         if (content.contains("sendContent")){
-            return jsonObject.getString("sendContent");
+            return this.jsonObject.getString("sendContent");
         }
         else if (content.contains("replyContent")){
-            return jsonObject.getString("replyContent");
+            return this.jsonObject.getString("replyContent");
         }
         else{
             return this.content;
@@ -142,28 +146,57 @@ public class MyLog {
     }
 
     public String getShortMem(){
-        if (this.member_id.contains("."))
-            return member_id.split(".")[1];
+        if (this.member_id.contains(".")) {
+            String[] segs = member_id.split("\\.");
+            return segs[1];
+        }
         else
             return member_id;
     }
 
     public String getVersion(){
-        JSONObject jsonObject = JSONObject.fromObject(this.content);
         if (content.contains("version")){
-            return jsonObject.getString("version");
+            return this.jsonObject.getString("version");
         }
         else if (content.contains("softwareVersion")){
-            return jsonObject.getString("softwareVersion");
+            return this.jsonObject.getString("softwareVersion");
         }
         else{
             return "";
         }
     }
 
+    public String getAudioRecordID(){
+        if (this.content.contains("audioRecordId"))
+            return this.jsonObject.getString("audioRecordId");
+        else
+            return "";
+    }
+
+    public String getRecordLink(){
+        String record_id = getAudioRecordID();
+        if (!record_id.equals("")){
+            return "<a href=\"http://record-resource.oss-cn-beijing.aliyuncs.com/"+this.member_id+"/"+record_id+
+                    "\">录音链接</a>";
+        }
+        else
+            return "";
+
+    }
+
     public String toSimpleLog(){
-        return this.time+" "+this.log_level+" "+this.modtrans+" "+this.getContentText()+
-                " "+this.getShortMem()+" "+this.getVersion();
+        System.out.println("1.1");
+        String re="";
+        if (this.modtrans.equals("user->preprocess")){
+            System.out.println("1.2");
+            re = time+" "+log_level+" "+modtrans.replaceAll(">","&gt;")+" "+getContentText()+" "+getRecordLink()+" "+getShortMem()+
+                    " "+getVersion();
+        }
+        else{
+            System.out.println("1.3");
+            re=time+" "+log_level+" "+modtrans.replaceAll(">","&gt;")+" "+getContentText()+" "+getShortMem()+" "+getVersion();
+        }
+        return re;
     }
 
     @Override
