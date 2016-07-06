@@ -60,7 +60,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-1 vcenter"></div>
-        <div class="col-md-4 vcenter">
+        <div class="col-md-7 vcenter">
             <input id="member_id" type="text" class="form-control" placeholder="输入要查询的member id"/>
             <select class="selectpicker" id="moduleSelect">
                 <option value="">Module</option>
@@ -87,7 +87,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-1 vcenter"></div>
-        <div class="col-md-6 vcenter">
+        <div class="col-md-7 vcenter">
             <table id="message" style="width: 80%"></table>
         </div>
     </div>

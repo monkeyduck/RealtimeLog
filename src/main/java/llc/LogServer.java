@@ -46,7 +46,6 @@ public class LogServer {
                     try{
                         MyLog log = new MyLog(message);
                         if (log.belongsToSimple()){
-                            System.out.println("#############");
                             broadcastSimple(log);
                         }
                         broadcastComplex(message);
@@ -76,8 +75,7 @@ public class LogServer {
     }
 
     public void broadcastSimple(MyLog log) throws IOException{
-        logger.info("Start to broadcast simple logs...");
-        System.out.println(log.toSimpleLog());
+        logger.info("Start to broadcast simple log: " + log.toSimpleLog());
         CopyOnWriteArraySet<WebsocketServer> simplewebSocketSet = SessionUtils.getSimpleWebSocketSet();
         logger.info("simple set size:"+simplewebSocketSet.size());
         for (WebsocketServer websocketServer: simplewebSocketSet){
