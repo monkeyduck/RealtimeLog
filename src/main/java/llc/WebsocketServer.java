@@ -19,23 +19,6 @@ public class WebsocketServer {
     private static final Logger logger = LoggerFactory.getLogger(WebsocketServer.class);
     private ClientSetting clientSetting = new ClientSetting();
     private Session session;
-    private static LogServer logServer;
-    static {
-        logServer = new LogServer();
-            Thread th = new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        logServer.start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (TimeoutException te){
-                        te.printStackTrace();
-                    }
-                }
-            });
-        th.start();
-
-    }
     /**
      * 打开连接时触发
      * @param session
