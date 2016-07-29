@@ -90,15 +90,8 @@ public class NormalLog {
         return content;
     }
 
-    public boolean isModtransUseful(){
-        if (this.module.contains("->"))
-            return true;
-        else
-            return false;
-    }
-
     public boolean belongsToSimple(){
-        if (this.module.contains("user"))
+        if (this.module.contains("user") && !this.getContentText().equals(""))
             return true;
         else
             return false;
@@ -156,7 +149,6 @@ public class NormalLog {
     }
 
     public String toSimpleLog(){
-        System.out.println("1.1");
         String re;
         if (this.module.equals("user->preprocess")){
             re = time+"&nbsp;&nbsp;&nbsp;&nbsp;"+level+"&nbsp;&nbsp;&nbsp;&nbsp;"+module.replaceAll(">","&gt;")
@@ -173,7 +165,7 @@ public class NormalLog {
     }
 
     public boolean isTrans() {
-        return module.contains("->") && !getContentText().equals("");
+        return module.contains("->");
     }
 
 //    @Override
