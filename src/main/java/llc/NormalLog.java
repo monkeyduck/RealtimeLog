@@ -112,7 +112,7 @@ public class NormalLog {
             return this.jsonObject.getString("replyContent");
         }
         else{
-            return this.content;
+            return "";
         }
     }
 
@@ -173,7 +173,7 @@ public class NormalLog {
     }
 
     public boolean isTrans() {
-        return module.contains("->");
+        return module.contains("->") && !getContentText().equals("");
     }
 
 //    @Override
