@@ -25,11 +25,13 @@ class Receiver {
         if (SessionUtils.getSimpleWebSocketSet().size() > 0 ||
                 SessionUtils.getComplexSocketSet().size() > 0) {
             try {
-                MyLog log = new MyLog(slog);
-                if (log.belongsToSimple()) {
-                    broadcastSimple(log);
+                NormalLog log = new NormalLog(slog);
+                if (log.isTrans()){
+                    if (log.belongsToSimple()) {
+                        broadcastSimple(log);
+                    }
+                    broadcastComplex(slog);
                 }
-                broadcastComplex(slog);
             } catch (Exception e) {
                 logger.error(e.getMessage());
             }
@@ -37,21 +39,19 @@ class Receiver {
     }
 
 
-    public void broadcastSimple(MyLog log) throws IOException {
-        logger.info("Start to broadcast simple log: " + log.toSimpleLog());
+    public void broadcastSimple(NormalLog log) throws IOException {
         CopyOnWriteArraySet<WebsocketServer> simplewebSocketSet = SessionUtils.getSimpleWebSocketSet();
-        logger.info("simple set size:"+simplewebSocketSet.size());
         for (WebsocketServer websocketServer: simplewebSocketSet){
             String member_id = websocketServer.getClientSetting().getMember_id();
             String module = websocketServer.getClientSetting().getModule();
             boolean flag_mem = true;
             boolean flag_module = true;
             if (!member_id.equals("")){
-                if (!log.getMember_id().contains(member_id))
+                if (!log.getMemberId().contains(member_id))
                     flag_mem = false;
             }
             if (!module.equals("") && !module.equals("All")){
-                if (!log.getModtrans().contains(module)){
+                if (!log.getModule().contains(module)){
                     flag_module = false;
                 }
             }
