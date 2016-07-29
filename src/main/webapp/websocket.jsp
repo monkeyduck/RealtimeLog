@@ -11,7 +11,6 @@
 %>
 
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <base href="<%=basePath%>">
@@ -61,26 +60,53 @@
     <div class="row">
         <div class="col-md-1 vcenter"></div>
         <div class="col-md-7 vcenter">
-            <input id="member_id" type="text" class="form-control" placeholder="输入要查询的member id"/>
-            <select class="selectpicker" id="moduleSelect">
-                <option value="">Module</option>
-                <option value="GeneralGame">GeneralGame</option>
-                <option value="dialog">dialog</option>
-                <option value="WorldView">WorldView</option>
-                <option value="handworkGuide">handworkGuide</option>
-                <option value="cartoon">cartoon</option>
-                <option value="music">music</option>
-                <option value="story">story</option>
-                <option value="FrontEnd">FrontEnd</option>
-                <option value="preprocess">Preprocess</option>
-                <option value="All">All</option>
-            </select>
-            <select class="selectpicker" id="difficulty">
-                <option value="simpleLog">Simple Log</option>
-                <option value="complexLog">Complex Log</option>
-            </select>
-            <button type="button" onclick="displayLog()" class="btn btn-default">Display</button>
-            <button type="button" onclick="closeWebSocket()" class="btn btn-default">Close</button>
+            <div style="float: left">
+                <input type="text" class="form-control" name="dateRangeBegin" id="dateRangeBegin"/>
+            </div>
+            <div style="float: left">
+                <select class="selectpicker" id="moduleSelect">
+                    <option value="">Module</option>
+                    <option value="GeneralGame">GeneralGame</option>
+                    <option value="dialog">dialog</option>
+                    <option value="WorldView">WorldView</option>
+                    <option value="handworkGuide">handworkGuide</option>
+                    <option value="cartoon">cartoon</option>
+                    <option value="music">music</option>
+                    <option value="story">story</option>
+                    <option value="FrontEnd">FrontEnd</option>
+                    <option value="preprocess">Preprocess</option>
+                    <option value="All">All</option>
+                </select>
+            </div>
+            <div style="float: left">
+                <select class="selectpicker" id="difficulty">
+                    <option value="simpleLog">Simple Log</option>
+                    <option value="complexLog">Complex Log</option>
+                </select>
+            </div>
+            <div style="float: left">
+                <button type="button" onclick="displayLog()" class="btn btn-default">Display</button>
+
+            </div>
+
+            <div style="float:left">
+                <button type="button" onclick="closeWebSocket()" class="btn btn-default">Close</button>
+
+            </div>
+
+           <div>
+               <input id="member_id" type="text" class="form-control"
+                      placeholder="输入要查询的member id"/>
+
+           </div>
+            <div style="float:left">
+                <button type="button" onclick="simpleDownload()" class="btn btn-default">下载简单日志</button>
+
+            </div>
+            <div style="float:left">
+                <button type="button" onclick="complexDownload()" class="btn btn-default">下载复杂日志</button>
+            </div>
+
         </div>
     </div>
 </div>
@@ -149,6 +175,34 @@
         var type = document.getElementById('difficulty').value;
         websocket.send("{\"member_id\":\""+id+"\",\"module\":\""+module+"\",\""+type+"\":1}");
 
+    }
+
+    $(function () {
+        var startDate = new Date()
+        startDate.setDate(startDate.getDate() - 1)
+        var endDate = startDate
+        var dateRangeBegin = $('input[name="dateRangeBegin"]')
+        dateRangeBegin.daterangepicker({
+            startDate: startDate,
+            singleDatePicker: true,
+            "maxDate": endDate,
+            showDropdowns: true,
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        });
+    })
+
+    function simpleDownload() {
+        var member_id = document.getElementById('member_id').value;
+        var date = document.getElementById('dateRangeBegin').value;
+        window.location.href = '<%=basePath%>downloadSimple?member_id='+member_id+'&date='+date;
+    }
+
+    function complexDownload() {
+        var member_id = document.getElementById('member_id').value;
+        var date = document.getElementById('dateRangeBegin').value;
+        window.location.href = '<%=basePath%>downloadComplex?member_id='+member_id+'&date='+date;
     }
 
 </script>

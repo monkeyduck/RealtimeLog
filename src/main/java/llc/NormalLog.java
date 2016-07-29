@@ -150,7 +150,7 @@ public class NormalLog {
 
     public String toSimpleLog(){
         String re;
-        if (this.module.equals("user->preprocess")){
+        if (!getRecordLink().equals("")){
             re = time+"&nbsp;&nbsp;&nbsp;&nbsp;"+level+"&nbsp;&nbsp;&nbsp;&nbsp;"+module.replaceAll(">","&gt;")
                     +"&nbsp;&nbsp;&nbsp;&nbsp;"+getContentText()+"&nbsp;&nbsp;&nbsp;&nbsp;"+getRecordLink()
                     +"&nbsp;&nbsp;&nbsp;&nbsp;"+getShortMem()+"&nbsp;&nbsp;&nbsp;&nbsp;"+getVersion();
