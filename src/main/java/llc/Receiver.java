@@ -20,7 +20,7 @@ class Receiver {
      * @param slog
      */
     public void handleMessage(String slog) {
-//        logger.info("receive " + ":{}", slog);
+        logger.info("receive " + ":{}", slog);
         if (SessionUtils.getSimpleWebSocketSet().size() > 0 ||
                 SessionUtils.getComplexSocketSet().size() > 0) {
             try {
