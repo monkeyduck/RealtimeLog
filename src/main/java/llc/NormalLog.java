@@ -91,7 +91,7 @@ public class NormalLog {
     }
 
     public boolean belongsToSimple(){
-        if (this.module.contains("user") && !this.getContentText().equals(""))
+        if (!this.getContentText().equals(""))
             return true;
         else
             return false;
