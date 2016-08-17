@@ -1,7 +1,7 @@
 package llc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -11,7 +11,7 @@ import javax.servlet.ServletContextListener;
  */
 public class WebAppContextListener implements ServletContextListener {
 
-    private static Logger logger = LoggerFactory.getLogger(WebAppContextListener.class);
+    private static Logger logger = Logger.getLogger("DayRollingFile");
     private static MQServer server = null;
 
     public void contextInitialized(ServletContextEvent event) {
@@ -28,6 +28,7 @@ public class WebAppContextListener implements ServletContextListener {
     }
 
     public void contextDestroyed(ServletContextEvent event) {
+        logger.info("Websocket start to shutdown...");
         server.stop();
     }
 

@@ -1,8 +1,7 @@
 package utils;
 
 import llc.WebsocketServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -14,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class SessionUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(SessionUtils.class);
+    private static final Logger logger = Logger.getLogger("DayRollingFile");
 
     private static CopyOnWriteArraySet<WebsocketServer> complexSocketSet = new CopyOnWriteArraySet<WebsocketServer>();
 
@@ -27,20 +26,26 @@ public class SessionUtils {
 
     public static void addSimple(WebsocketServer websocket){
         simpleSocketSet.add(websocket);
+        logger.info("Added a simple client, now there are "+simpleSocketSet.size()+" clients");
     }
 
     public static void removeSimple(WebsocketServer websocket){
-        if (simpleSocketSet.contains(websocket))
+        if (simpleSocketSet.contains(websocket)){
             simpleSocketSet.remove(websocket);
+            logger.info("Deleted a simple client, now there are "+simpleSocketSet.size()+" clients");
+        }
     }
 
     public static void addComplex(WebsocketServer websocketServer){
         complexSocketSet.add(websocketServer);
+        logger.info("Added a complex client, now there are "+complexSocketSet.size()+" clients");
+
     }
 
     public static void removeComplex(WebsocketServer websocketServer){
         if (complexSocketSet.contains(websocketServer)){
             complexSocketSet.remove(websocketServer);
+            logger.info("Deleted a complex client, now there are "+complexSocketSet.size()+" clients");
         }
     }
 

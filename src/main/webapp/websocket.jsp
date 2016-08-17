@@ -127,7 +127,7 @@
 
     //判断当前浏览器是否支持WebSocket
     if('WebSocket' in window){
-        websocket = new WebSocket("ws://123.56.237.250:80/websocket/websocket");
+        websocket = new WebSocket("ws://101.201.103.114:8080/websocket/websocket");
     }
     else{
         alert('Not support websocket')
@@ -179,7 +179,6 @@
 
     $(function () {
         var startDate = new Date()
-        startDate.setDate(startDate.getDate() - 1)
         var endDate = startDate
         var dateRangeBegin = $('input[name="dateRangeBegin"]')
         dateRangeBegin.daterangepicker({

@@ -8,7 +8,7 @@ import java.util.Optional;
  * Created by hxx on 3/30/16.
  */
 public enum EnvironmentType {
-    Alpha,Beta,Online;
+    Alpha,Beta,Online,Release;
     private static Map<String, EnvironmentType> dic = new HashMap<String, EnvironmentType>();
     private static final String error_logStore = "logerror";
     private static final String error_logStore_alpha = "logerror-alpha";

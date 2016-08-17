@@ -1,8 +1,7 @@
 package llc;
 
 import net.sf.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import utils.ClientSetting;
 import utils.SessionUtils;
 
@@ -16,7 +15,7 @@ import java.util.concurrent.TimeoutException;
  */
 @ServerEndpoint("/websocket")
 public class WebsocketServer {
-    private static final Logger logger = LoggerFactory.getLogger(WebsocketServer.class);
+    private static final Logger logger = Logger.getLogger("DayRollingFile");
     private ClientSetting clientSetting = new ClientSetting();
     private Session session;
     /**

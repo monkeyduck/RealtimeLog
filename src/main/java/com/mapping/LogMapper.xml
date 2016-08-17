@@ -5,7 +5,7 @@
     <resultMap id="BaseResultMap" type="com.model.OdpsLog" >
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="log_source" property="log_source" jdbcType="VARCHAR" />
-        <result column="log_time" property="log_time" jdbcType="BIGINT" />
+        <result column="time_stamp" property="time_stamp" jdbcType="BIGINT" />
         <result column="log_topic" property="log_topic" jdbcType="VARCHAR" />
         <result column="time" property="time" jdbcType="VARCHAR" />
         <result column="device_id" property="device_id" jdbcType="VARCHAR" />
@@ -17,13 +17,13 @@
     </resultMap>
 
      <sql id="Base_Column_List" >
-      log_source,log_time,log_topic,time,device_id,ip, member_id,log_level,modtrans,content
+      log_source,time_stamp,log_topic,time,device_id,ip, member_id,log_level,modtrans,content
     </sql>
     <select id="queryLog" resultMap="BaseResultMap" parameterType="java.lang.String" >
             select
         <include refid="Base_Column_List" />
             from ${tableName}
-         where member_id=#{member_id}
+         where member_id like #{member_id} ORDER BY time_stamp ASC
     </select>
 
 

@@ -3,9 +3,8 @@ package llc;
 import llc.Enums.ELevelType;
 import llc.Enums.EnvironmentType;
 import net.sf.json.JSONObject;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -14,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class NormalLog {
 
-    private static final Logger logger = LoggerFactory.getLogger(NormalLog.class);
+    private static final Logger logger = Logger.getLogger("DayRollingFile");
     private String content;
     private String memberId;
     private String deviceId;
@@ -42,7 +41,7 @@ public class NormalLog {
         //检查日志是否合法
         content = processContent(memberId, timeStamp, module,(json.getString("content")));
         jsonObject = JSONObject.fromObject(content);
-        time = new DateTime(Long.parseLong(timeStamp)).toString("yyyy-MM-dd HH:mm:ss");
+        time = new DateTime(Long.parseLong(timeStamp)).toString("yyyy-MM-dd HH:mm:ss.SSS");
     }
 
     public String getContent() {
@@ -99,7 +98,7 @@ public class NormalLog {
 
     public String getContentText(){
         if (content.contains("sendContent")){
-            return this.jsonObject.getString("sendContent");
+            return this.jsonObject.getString("sendContent")+" "+jsonObject.getString("sendType");
         }
         else if (content.contains("replyContent")){
             return this.jsonObject.getString("replyContent");
@@ -160,6 +159,19 @@ public class NormalLog {
                     +"&nbsp;&nbsp;&nbsp;&nbsp;"+getContentText()+"&nbsp;&nbsp;&nbsp;&nbsp;"+getShortMem()
                     +"&nbsp;&nbsp;&nbsp;&nbsp;"
                     +getVersion();
+        }
+        return re;
+    }
+
+    public String toReadableSimpleLog(){
+        String re;
+        if (!getRecordLink().equals("")){
+            re = time+"\t"+level+"\t"+module+"\t"+getContentText()+"\t"+getRecordLink()
+                    +"\t"+getShortMem()+"\t"+getVersion();
+        }
+        else{
+            re=time+"\t"+level+"\t"+module+"\t"+getContentText()+"\t"+getShortMem()
+                    +"\t"+getVersion();
         }
         return re;
     }

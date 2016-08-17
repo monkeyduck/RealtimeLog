@@ -22,9 +22,17 @@ public class OdpsLog {
 
     private String log_source;
 
-    private long log_time;
+    private long time_stamp;
 
     private String log_topic;
+
+    public long getTime_stamp() {
+        return time_stamp;
+    }
+
+    public void setTime_stamp(long time_stamp) {
+        this.time_stamp = time_stamp;
+    }
 
     public String getContent() {
         return content;
@@ -90,14 +98,6 @@ public class OdpsLog {
         this.log_source = log_source;
     }
 
-    public long getLog_time() {
-        return log_time;
-    }
-
-    public void setLog_time(long log_time) {
-        this.log_time = log_time;
-    }
-
     public String getLog_topic() {
         return log_topic;
     }
@@ -113,7 +113,7 @@ public class OdpsLog {
     public String getContentText(){
         JSONObject jsonObject = JSONObject.fromObject(content);
         if (content.contains("sendContent")){
-            return jsonObject.getString("sendContent");
+            return jsonObject.getString("sendContent")+" "+jsonObject.getString("sendType");
         }
         else if (content.contains("replyContent")){
             return jsonObject.getString("replyContent");
@@ -182,7 +182,7 @@ public class OdpsLog {
     }
 
     public String toComplexLog(){
-        return "{\"log_source\":\"" + this.getLog_source()+"\",\"log_time\":"+this.getLog_time()+",\"log_topic\":\""
+        return "{\"log_source\":\"" + this.getLog_source()+"\",\"log_time\":"+this.getTime_stamp()+",\"log_topic\":\""
                 +this.getLog_topic()+"\",\"time\":\""+this.getTime()+"\",\"device_id\":\""+this.getDevice_id()+
                 "\",\"ip\":\""+this.getIp()+"\",\"memberId\":\""+this.getMember_id()+"\",\"level\":\""+
                 this.getLog_level()+"\",\"module\":\""+this.getModtrans()+"\",\"content\":"+this.getContent()+"}";

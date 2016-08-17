@@ -1,8 +1,7 @@
 package llc;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import utils.SessionUtils;
 
 import java.io.IOException;
@@ -13,27 +12,27 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * Created by hxx on 5/3/16.
  */
 class Receiver {
-    static final Logger logger = LoggerFactory.getLogger(Receiver.class);
-
+    static final Logger logger = Logger.getLogger("DayRollingFile");
+    static final Logger complexlogger = Logger.getLogger("complex");
+    static final Logger simplelogger = Logger.getLogger("simple");
     /**
      * 消费日志
      * @param slog
      */
     public void handleMessage(String slog) {
-        logger.info("receive " + ":{}", slog);
-        if (SessionUtils.getSimpleWebSocketSet().size() > 0 ||
-                SessionUtils.getComplexSocketSet().size() > 0) {
-            try {
-                NormalLog log = new NormalLog(slog);
-                if (log.isTrans()){
-                    if (log.belongsToSimple()) {
-                        broadcastSimple(log);
-                    }
-                    broadcastComplex(slog);
+        logger.info("receive: " + slog);
+        try {
+            NormalLog log = new NormalLog(slog);
+            if (log.isTrans()){
+                if (log.belongsToSimple()) {
+                    broadcastSimple(log);
+                    simplelogger.info(log.toReadableSimpleLog());
                 }
-            } catch (Exception e) {
-                logger.error(e.getMessage());
+                broadcastComplex(slog);
+                complexlogger.info(slog);
             }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
     }
 

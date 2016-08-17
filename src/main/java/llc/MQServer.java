@@ -1,7 +1,6 @@
 package llc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -20,9 +19,10 @@ public class MQServer {
     final static String queueName = Config.INSTANCE.getQueueName();
     private final static String exchangeName = Config.INSTANCE.getExchangeName();
     private final static String routineKey = Config.INSTANCE.getRoutineKey();
-    static final Logger logger = LoggerFactory.getLogger(MQServer.class);
+    static final Logger logger = Logger.getLogger("DayRollingFile");
     private CachingConnectionFactory cf;
     private RabbitAdmin admin;
+    private SimpleMessageListenerContainer container;
 
     public MQServer() {
         cf = new CachingConnectionFactory(serverIP);
@@ -39,8 +39,7 @@ public class MQServer {
         admin.declareExchange(exchange);
         admin.declareBinding(BindingBuilder.bind(queue).to(exchange).with(routineKey).noargs());
 
-        SimpleMessageListenerContainer container =
-                new SimpleMessageListenerContainer(cf);
+        container = new SimpleMessageListenerContainer(cf);
         Receiver listener = new Receiver();
 
         MessageListenerAdapter adapter = new MessageListenerAdapter(listener);
@@ -48,10 +47,12 @@ public class MQServer {
         container.setQueueNames(queueName);
         logger.info("Start mq with queueName: "+queueName);
         container.start();
+
     }
 
     public void stop(){
-        admin.deleteQueue(queueName);
+        logger.info("Websocket shutdown");
+        container.stop();
     }
 
 }
