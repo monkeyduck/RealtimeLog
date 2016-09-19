@@ -20,7 +20,6 @@ class Receiver {
      * @param slog
      */
     public void handleMessage(String slog) {
-        logger.info("receive: " + slog);
         try {
             NormalLog log = new NormalLog(slog);
             if (log.isTrans()){

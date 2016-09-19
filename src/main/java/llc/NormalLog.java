@@ -97,15 +97,16 @@ public class NormalLog {
     }
 
     public String getContentText(){
-        if (content.contains("sendContent")){
+        if (content.contains("nonFirstStart")){
+            return "nonFirstStart  "+this.jsonObject.getString("sendModule");
+        }
+        else if (content.contains("sendContent")){
             return this.jsonObject.getString("sendContent")+" "+jsonObject.getString("sendType");
         }
         else if (content.contains("replyContent")){
             return this.jsonObject.getString("replyContent");
         }
-        else{
-            return "";
-        }
+        else return "";
     }
 
     public String getShortMem(){

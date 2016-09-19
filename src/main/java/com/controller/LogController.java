@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by llc on 16/7/29.
@@ -61,21 +63,27 @@ public class LogController {
             mqlog = path + tableName;
         }
         File readFile = new File(mqlog);
+        int len = 45;
         try {
             List<String> simple = FileUtils.readLines(readFile);
-
+            Pattern pattern = Pattern.compile("(\\d){4}-(\\d){2}-(\\d){2}");
+            Matcher matcher = null;
             for (String str: simple){
-                if (str.contains(member_id)){
-                    String s = str.split("\\t")[0];
-                    String sTime = s.substring(s.length()-23);
-                    DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
-                    //时间解析
-                    DateTime dateTime = DateTime.parse(sTime, format);
-                    long timeStamp = dateTime.getMillis();
-                    if (sortLogs.containsKey(timeStamp)){
-                        timeStamp += 1;
+                if (str.contains(member_id) && str.length()>len){
+                    matcher = pattern.matcher(str);
+                    if (matcher.find()) {
+                        int pos = str.indexOf(matcher.group());
+                        String sTime = str.substring(pos, pos + 23);
+
+                        DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
+                        //时间解析
+                        DateTime dateTime = DateTime.parse(sTime, format);
+                        long timeStamp = dateTime.getMillis();
+                        if (sortLogs.containsKey(timeStamp)) {
+                            timeStamp += 1;
+                        }
+                        sortLogs.put(timeStamp, str);
                     }
-                    sortLogs.put(timeStamp, str);
                 }
             }
         } catch (IOException e) {
@@ -165,4 +173,6 @@ public class LogController {
         }
         file.delete();
     }
+
+
 }
