@@ -1,6 +1,7 @@
 package utils;
 
 import com.utils.DownloadFileUtil;
+import llc.NormalLog;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -20,6 +21,22 @@ import java.util.regex.Pattern;
  */
 public class Test {
     public static void main(String args[]){
+        File file = new File("/Users/linchuan/Downloads/a.txt");
+        try {
+            List<String> logs = FileUtils.readLines(file);
+            for (String slog : logs){
+                slog = slog.substring(slog.indexOf("{"));
+                NormalLog log = new NormalLog(slog);
+                if (log.isTrans()){
+                    if (log.belongsToSimple()) {
+                        System.out.println((log.toReadableSimpleLog()));
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        File readFile = new File("/Users/linchuan/Downloads/854.txt");
 //        String member_id = "8548342";
 //        int cnt = 0,len = 45;
