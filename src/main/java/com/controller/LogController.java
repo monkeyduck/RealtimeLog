@@ -134,7 +134,6 @@ public class LogController {
                 if (str.contains(member_id)){
                     complexLogs.add(str);
                 }
-
             }
         }catch (Exception e){
             e.printStackTrace();
