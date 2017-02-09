@@ -104,7 +104,7 @@ public class NormalLog {
             return this.jsonObject.getString("sendContent")+" "+jsonObject.getString("sendType");
         }
         else if (content.contains("replyContent")){
-            return this.jsonObject.getString("replyContent");
+            return this.jsonObject.getString("replyContent") + " " + jsonObject.getString("replyType");
         }
         else return "";
     }

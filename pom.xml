@@ -21,6 +21,12 @@
 
     <dependencies>
 
+        <!--kafka-->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.11</artifactId>
+            <version>0.10.0.0</version>
+        </dependency>
         <!-- rabbit mq -->
         <dependency>
             <groupId>com.rabbitmq</groupId>
