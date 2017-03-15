@@ -15,9 +15,9 @@ public class NormalLog {
 
     private static final Logger logger = Logger.getLogger("DayRollingFile");
     private String content;
-    private String memberId;
-    private String deviceId;
-    private String module;
+    private String member_id;
+    private String device_id;
+    private String modtrans;
     private String ip;
     private EnvironmentType envType;
     private String timeStamp;
@@ -31,15 +31,15 @@ public class NormalLog {
     public NormalLog(String log) throws Exception {
         JSONObject json = JSONObject.fromObject(log);
         level = ELevelType.fromString(json.getString("level"));
-        memberId = replaceNull(json.getString("memberId"));
-        module = replaceNull(json.getString("module"));
+        member_id = replaceNull(json.getString("memberId"));
+        modtrans = replaceNull(json.getString("module"));
         ip = replaceNull(json.getString("ip"));
-        deviceId = replaceNull(json.getString("deviceId"));
+        device_id = replaceNull(json.getString("deviceId"));
         String environment = replaceNull(json.getString("environment"));
         timeStamp = replaceNull(json.getString("timeStamp"));
         envType = EnvironmentType.fromString(environment);
         //检查日志是否合法
-        content = processContent(memberId, timeStamp, module,(json.getString("content")));
+        content = processContent(member_id, timeStamp, modtrans,(json.getString("content")));
         jsonObject = JSONObject.fromObject(content);
         time = new DateTime(Long.parseLong(timeStamp)).toString("yyyy-MM-dd HH:mm:ss.SSS");
     }
@@ -48,16 +48,28 @@ public class NormalLog {
         return content;
     }
 
-    public String getMemberId() {
-        return memberId;
+    public String getModtrans() {
+        return modtrans;
     }
 
-    public String getDeviceId() {
-        return deviceId;
+    public void setModtrans(String modtrans) {
+        this.modtrans = modtrans;
     }
 
-    public String getModule() {
-        return module;
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
+    }
+
+    public String getMember_id() {
+        return member_id;
+    }
+
+    public void setMember_id(String member_id) {
+        this.member_id = member_id;
     }
 
     public String getIp() {
@@ -80,10 +92,10 @@ public class NormalLog {
         return st == null ? "" : st;
     }
 
-    static private String processContent(String memberId, String timeStamp, String module, String content)
+    static private String processContent(String member_id, String timeStamp, String modtrans, String content)
             throws Exception{
-        if (module.equals("") || memberId.equals("") || timeStamp.equals("")) {
-            String message = "module, memberId and timeStamp should have value";
+        if (modtrans.equals("") || member_id.equals("") || timeStamp.equals("")) {
+            String message = "modtrans, member_id and timeStamp should have value";
             throw new Exception(message);
         }
         return content;
@@ -110,12 +122,12 @@ public class NormalLog {
     }
 
     public String getShortMem(){
-        if (this.memberId.contains(".")) {
-            String[] segs = memberId.split("\\.");
+        if (this.member_id.contains(".")) {
+            String[] segs = member_id.split("\\.");
             return segs[1];
         }
         else
-            return memberId;
+            return member_id;
     }
 
     public String getVersion(){
@@ -140,7 +152,7 @@ public class NormalLog {
     public String getRecordLink(){
         String record_id = getAudioRecordID();
         if (!record_id.equals("")){
-            return "<a href=\"http://record-resource.oss-cn-beijing.aliyuncs.com/"+this.memberId+"/"+record_id+
+            return "<a href=\"http://record-resource.oss-cn-beijing.aliyuncs.com/"+this.member_id+"/"+record_id+
                     "\">录音链接</a>";
         }
         else
@@ -151,12 +163,12 @@ public class NormalLog {
     public String toSimpleLog(){
         String re;
         if (!getRecordLink().equals("")){
-            re = time+"&nbsp;&nbsp;&nbsp;&nbsp;"+level+"&nbsp;&nbsp;&nbsp;&nbsp;"+module.replaceAll(">","&gt;")
+            re = time+"&nbsp;&nbsp;&nbsp;&nbsp;"+level+"&nbsp;&nbsp;&nbsp;&nbsp;"+modtrans.replaceAll(">","&gt;")
                     +"&nbsp;&nbsp;&nbsp;&nbsp;"+getContentText()+"&nbsp;&nbsp;&nbsp;&nbsp;"+getRecordLink()
                     +"&nbsp;&nbsp;&nbsp;&nbsp;"+getShortMem()+"&nbsp;&nbsp;&nbsp;&nbsp;"+getVersion();
         }
         else{
-            re=time+"&nbsp;&nbsp;&nbsp;&nbsp;"+level+"&nbsp;&nbsp;&nbsp;&nbsp;"+module.replaceAll(">","&gt;")
+            re=time+"&nbsp;&nbsp;&nbsp;&nbsp;"+level+"&nbsp;&nbsp;&nbsp;&nbsp;"+modtrans.replaceAll(">","&gt;")
                     +"&nbsp;&nbsp;&nbsp;&nbsp;"+getContentText()+"&nbsp;&nbsp;&nbsp;&nbsp;"+getShortMem()
                     +"&nbsp;&nbsp;&nbsp;&nbsp;"
                     +getVersion();
@@ -167,25 +179,25 @@ public class NormalLog {
     public String toReadableSimpleLog(){
         String re;
         if (!getRecordLink().equals("")){
-            re = time+"\t"+level+"\t"+module+"\t"+getContentText()+"\t"+getRecordLink()
+            re = time+"\t"+level+"\t"+modtrans+"\t"+getContentText()+"\t"+getRecordLink()
                     +"\t"+getShortMem()+"\t"+getVersion();
         }
         else{
-            re=time+"\t"+level+"\t"+module+"\t"+getContentText()+"\t"+getShortMem()
+            re=time+"\t"+level+"\t"+modtrans+"\t"+getContentText()+"\t"+getShortMem()
                     +"\t"+getVersion();
         }
         return re;
     }
 
     public boolean isTrans() {
-        return module.contains("->");
+        return modtrans.contains("->");
     }
 
 //    @Override
 //    public String toString(){
 //        return "{\"log_source\":\"" + this.getLog_source()+"\",\"log_time\":"+this.getLog_time()+",\"log_topic\":\""
 //                +this.getLog_topic()+"\",\"time\":\""+this.getTime()+"\",\"device_id\":\""+this.getDevice_id()+
-//                "\",\"ip\":\""+this.getIp()+"\",\"memberId\":\""+this.getMember_id()+"\",\"level\":\""+
-//                this.getLog_level()+"\",\"module\":\""+this.getModtrans()+"\",\"content\":"+this.getContent()+"}";
+//                "\",\"ip\":\""+this.getIp()+"\",\"member_id\":\""+this.getMember_id()+"\",\"level\":\""+
+//                this.getLog_level()+"\",\"modtrans\":\""+this.getModtrans()+"\",\"content\":"+this.getContent()+"}";
 //    }
 }

@@ -1,6 +1,5 @@
 package com.controller;
 
-import com.model.OdpsLog;
 import com.service.LogService;
 import com.utils.DownloadFileUtil;
 import org.apache.commons.io.FileUtils;
@@ -11,13 +10,11 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,7 +50,7 @@ public class LogController {
          * 查询今日日志
          */
         String mqlog;
-        String path = "/root/log4j/hxx/webSocket/";
+        String path = "/var/log/webSocket/";
         if (date.equals(todayDate)) {
             mqlog = path + "simplelog";
         }
@@ -91,7 +88,7 @@ public class LogController {
             e.printStackTrace();
         }
         String targetName = "simple_"+member_id+"_"+date+".txt";
-        String basePath = "/root/log4j/hxx/simpleDownload/";
+        String basePath = "/var/log/simpleDownload/";
 
         File file = new File(basePath+targetName);
         try {
@@ -118,7 +115,7 @@ public class LogController {
          * 查询今日复杂日志
          */
         String mqlog;
-        String path = "/root/log4j/hxx/webSocket/";
+        String path = "/var/log/webSocket/";
         if (date.equals(today)) {
             mqlog = path + "complexlog";
         }
@@ -156,7 +153,7 @@ public class LogController {
 //        }
 
         String targetName = "complex_"+member_id+"_"+date+".txt";
-        String basePath = "/root/log4j/hxx/complexDownload/";
+        String basePath = "/var/log/complexDownload/";
         File file = new File(basePath+targetName);
         if (!file.exists()){
             try {

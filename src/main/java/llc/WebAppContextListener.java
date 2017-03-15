@@ -12,7 +12,7 @@ import javax.servlet.ServletContextListener;
 public class WebAppContextListener implements ServletContextListener {
 
     private static Logger logger = Logger.getLogger("DayRollingFile");
-    private static MQServer server = null;
+//    private static MQServer server = null;
     private static KafkaProcessor kafka = null;
 
 //    public void contextInitialized(ServletContextEvent event) {
@@ -42,6 +42,7 @@ public class WebAppContextListener implements ServletContextListener {
     }
 
     public void contextDestroyed(ServletContextEvent event) {
+
         logger.info("Websocket start to shutdown...");
     }
 

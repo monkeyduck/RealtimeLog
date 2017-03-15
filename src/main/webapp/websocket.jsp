@@ -16,44 +16,16 @@
     <base href="<%=basePath%>">
     <title>My WebSocket</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
-    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-    <!-- 新 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
-
-    <!-- 可选的Bootstrap主题文件（一般不用引入） -->
-    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
-
-    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
     <!-- DatePicker-->
-    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css"/>
-    <style type="text/css">
-        .vcenter {
-            display: inline-block;
-            vertical-align: middle;
-            float: none;
-        }
-
-        .col-centered {
-            float: none;
-            margin: 0 auto;
-        }
-    </style>
 </head>
 
 <body>
 <header>
     <div class="container" style="text-align: center">
-        <h3>线上实时日志</h3>
+        <h3>实时日志</h3>
     </div>
 </header>
 <div class="container-fluid">
@@ -64,7 +36,7 @@
                 <input type="text" class="form-control" name="dateRangeBegin" id="dateRangeBegin"/>
             </div>
             <div style="float: left">
-                <select class="selectpicker" id="moduleSelect">
+                <select class="selectpicker" id="moduleSelect" data-width="100%">
                     <option value="">Module</option>
                     <option value="GeneralGame">GeneralGame</option>
                     <option value="dialog">dialog</option>
@@ -79,10 +51,23 @@
                 </select>
             </div>
             <div style="float: left">
-                <select class="selectpicker" id="difficulty">
+                <select class="selectpicker" data-width="100%" id="difficulty">
                     <option value="simpleLog">Simple Log</option>
                     <option value="complexLog">Complex Log</option>
                 </select>
+            </div>
+            <%--<div style="float: left">--%>
+                <%--<select class="selectpicker" data-width="100%" id="envSelect">--%>
+                    <%--<option value="alpha">小乐-alpha</option>--%>
+                    <%--<option value="release">小乐-release</option>--%>
+                    <%--<option value="alpha">贝瓦-alpha</option>--%>
+                    <%--<option value="release">贝瓦-release</option>--%>
+                <%--</select>--%>
+            <%--</div>--%>
+            <div>
+               <input id="member_id" type="text" class="form-control"
+                      placeholder="输入要查询的member id"/>
+
             </div>
             <div style="float: left">
                 <button type="button" onclick="displayLog()" class="btn btn-default">Display</button>
@@ -93,12 +78,6 @@
                 <button type="button" onclick="closeWebSocket()" class="btn btn-default">Close</button>
 
             </div>
-
-           <div>
-               <input id="member_id" type="text" class="form-control"
-                      placeholder="输入要查询的member id"/>
-
-           </div>
             <div style="float:left">
                 <button type="button" onclick="simpleDownload()" class="btn btn-default">下载简单日志</button>
 
@@ -121,13 +100,19 @@
 
 </div>
 </body>
-
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<script src="resources/reconnecting-websocket-master/reconnecting-websocket.js"></script>
+<script src="resources/reconnecting-websocket-master/reconnecting-websocket.min.js"></script>
 <script type="text/javascript">
     var websocket = null;
 
     //判断当前浏览器是否支持WebSocket
     if('WebSocket' in window){
-        websocket = new WebSocket("ws://101.201.103.114:8080/websocket/websocket");
+        websocket = new ReconnectingWebSocket("ws://101.200.73.96:8080/websocket/websocket");
     }
     else{
         alert('Not support websocket')
@@ -152,6 +137,7 @@
     websocket.onclose = function(){
         setMessageInnerHTML("Closed connection.");
     }
+
 
     //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
     window.onbeforeunload = function(){

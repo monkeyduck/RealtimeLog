@@ -2,6 +2,8 @@ package llc;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.log4j.Logger;
+
 
 /**
  * Created by hxx on 5/4/16.
@@ -9,12 +11,13 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 enum Config {
     INSTANCE;
     private static PropertiesConfiguration configuration;
+    private static Logger logger = Logger.getLogger(Config.class);
 
     static {
         try {
             configuration = new PropertiesConfiguration("amqpconf.properties");
         } catch (ConfigurationException e) {
-            Receiver.logger.error(e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 

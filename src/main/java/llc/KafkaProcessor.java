@@ -9,7 +9,6 @@ import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
-
 import org.apache.log4j.Logger;
 import utils.SessionUtils;
 
@@ -27,7 +26,7 @@ public class KafkaProcessor implements Runnable{
     // Kafka消费者订阅的主题,不同模块使用是相同的
     private final static String topic = "aibasisStats";
     // Kafka
-    private final static String groupId = "webSocketConsumer";
+    private final static String groupId = "webSocketConsumer2";
     // logger
 //    static final Logger logger = LoggerFactory.getLogger(KafkaProcessor.class);
     static final Logger logger = org.apache.log4j.Logger.getLogger("DayRollingFile");
@@ -90,11 +89,11 @@ public class KafkaProcessor implements Runnable{
             boolean flag_mem = true;
             boolean flag_module = true;
             if (!member_id.equals("")){
-                if (!log.getMemberId().contains(member_id))
+                if (!log.getMember_id().contains(member_id))
                     flag_mem = false;
             }
             if (!module.equals("") && !module.equals("All")){
-                if (!log.getModule().contains(module)){
+                if (!log.getModtrans().contains(module)){
                     flag_module = false;
                 }
             }

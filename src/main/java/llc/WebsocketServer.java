@@ -36,7 +36,7 @@ public class WebsocketServer {
     @OnMessage
     public String onMessage(String message) {
         JSONObject jsonObject = JSONObject.fromObject(message);
-        String id = jsonObject.getString("member_id");
+        String id = jsonObject.getString("memberId");
         String module = jsonObject.getString("module");
         if (!id.equals("")) clientSetting.setMember_id(id);
         if (!module.equals("")) clientSetting.setModule(module);

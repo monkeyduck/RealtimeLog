@@ -44,11 +44,11 @@ class Receiver {
             boolean flag_mem = true;
             boolean flag_module = true;
             if (!member_id.equals("")){
-                if (!log.getMemberId().contains(member_id))
+                if (!log.getMember_id().contains(member_id))
                     flag_mem = false;
             }
             if (!module.equals("") && !module.equals("All")){
-                if (!log.getModule().contains(module)){
+                if (!log.getModtrans().contains(module)){
                     flag_module = false;
                 }
             }
